@@ -103,16 +103,17 @@
         function doLookup (domainName, id) {
             // start the ajax spinner gif
             $( '#lookup-domain-name-' + id ).html("<img src=\"images/ajax-loader.gif\" />");
+            var transformedDomainName = domainName.toLowerCase().replace(/ /g, '')+'.eu';
             $.ajax( '/lookup', {
                 dataType:'json',
-                data:{'domainname' : domainName.toLowerCase().replace(/ /g, '')+'.eu'},
+                data:{'domainname' : transformedDomainName},
                 type:'GET',
                 success:function ( data ) {
                     var lookupData = JSON.parse(data.response);
                     var isAvailable = false;
                     if(typeof lookupData.WhoisRecord.registryData.status != 'undefined') {
                         if(lookupData.WhoisRecord.registryData.status === 'AVAILABLE') {
-                            $( '#lookup-domain-name-' + id ).html( "<p class =\"text-success\">AVAILABLE</p>");
+                            $( '#lookup-domain-name-' + id ).html( "<p title=\""+transformedDomainName+"\"><a style=\"color: green;\" href=\"https://whois.eurid.eu/en/search?domain="+transformedDomainName+"\" target=\"_blank\">AVAILABLE</a></p>");
                             isAvailable = true;
                         }
                     }
